@@ -1,0 +1,48 @@
+<! Doctype html>
+<html>
+<head>
+<link rel="stylesheet" href="style.css">
+<script type="text/javascript" src="script.js"></script>
+<script type="text/javascript" src="QueryData.js"></script>
+</head>
+<body onLoad="createDatabase();getid()">
+<a href="index.html"><input type="button" class="btn" id="btnShow" value="Show Data" onClick=""></a>
+<h3>Edit Record</h3><br />
+<input type="text"  id="logid" class="txtbox" placeholder="ID" disabled="disabled" ><br />
+<input type="text"  id="logname" class="txtbox" placeholder="Name" ><br />
+<input type="button"  id="logname" class="btn" value="Update" onclick="update()"><br />
+</body>
+<script>
+var id;
+function getid()
+{
+	var getData = new QueryData();
+	//alert(getData.id);
+	id = getData.id;
+	filterData(getData.id);
+}
+
+function filterData(id)
+{
+	db.transaction(function (tx)
+	{
+   		tx.executeSql('SELECT * FROM LOGS WHERE id = '+ id, [], function (tx, results)
+		{
+		    document.getElementById("logid").value = results.rows.item(0).id;
+			document.getElementById("logname").value = results.rows.item(0).log;
+	 	}, null);
+	});
+}
+
+function update()
+{
+	db.transaction(function (tx)
+	{
+   		tx.executeSql('UPDATE LOGS SET log = '+document.getElementById("logname").value+' WHERE id = '+ id, [], function (tx, results)
+		{
+		   	window.location.href = "index.html";
+	 	}, null);
+	});
+}
+</script>
+</html>
